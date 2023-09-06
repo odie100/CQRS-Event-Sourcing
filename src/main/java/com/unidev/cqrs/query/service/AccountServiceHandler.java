@@ -6,6 +6,7 @@ import com.unidev.cqrs.commonapi.events.AccountCreatedEvent;
 import com.unidev.cqrs.commonapi.events.AccountCreditedEvent;
 import com.unidev.cqrs.commonapi.events.AccountDebitedEvent;
 import com.unidev.cqrs.commonapi.queries.GetAllAccountQuery;
+import com.unidev.cqrs.commonapi.queries.GetAnAccountQuery;
 import com.unidev.cqrs.query.entities.Account;
 import com.unidev.cqrs.query.entities.Operation;
 import com.unidev.cqrs.query.repositories.AccountRepository;
@@ -80,5 +81,10 @@ public class AccountServiceHandler {
     @QueryHandler
     public List<Account> on(GetAllAccountQuery query){
         return this.accountRepository.findAll();
+    }
+
+    @QueryHandler
+    public Account on(GetAnAccountQuery query){
+        return this.accountRepository.findById(query.getAccountId()).get();
     }
 }
