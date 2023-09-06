@@ -1,4 +1,4 @@
-package com.unidev.cqrs.commands.controllers.exceptions;
+package com.unidev.cqrs.commonapi.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
