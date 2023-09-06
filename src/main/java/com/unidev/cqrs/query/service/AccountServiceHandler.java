@@ -3,6 +3,7 @@ package com.unidev.cqrs.query.service;
 import com.unidev.cqrs.commonapi.enums.OperationType;
 import com.unidev.cqrs.commonapi.events.AccountActivatedEvent;
 import com.unidev.cqrs.commonapi.events.AccountCreatedEvent;
+import com.unidev.cqrs.commonapi.events.AccountCreditedEvent;
 import com.unidev.cqrs.commonapi.events.AccountDebitedEvent;
 import com.unidev.cqrs.query.entities.Account;
 import com.unidev.cqrs.query.entities.Operation;
@@ -54,10 +55,22 @@ public class AccountServiceHandler {
                 .date(new Date()) //this must be in the write side
                 .type(OperationType.DEBIT)
                 .build();
-        this.operationRepository.save(operation);
         account.setBalance(account.getBalance() - event.getAmount());
+        this.operationRepository.save(operation);
         this.accountRepository.save(account);
     }
 
-
+    @EventHandler
+    public void on(AccountCreditedEvent event){
+        Account account = this.accountRepository.findById(event.getId()).get();
+        Operation operation = Operation.builder()
+                .type(OperationType.CREDIT)
+                .account(account)
+                .date(new Date())
+                .amount(event.getAmount())
+                .build();
+        account.setBalance(account.getBalance() + event.getAmount());
+        this.operationRepository.save(operation);
+        this.accountRepository.save(account);
+    }
 }
