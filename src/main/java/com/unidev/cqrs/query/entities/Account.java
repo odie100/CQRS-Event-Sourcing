@@ -1,5 +1,6 @@
 package com.unidev.cqrs.query.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.unidev.cqrs.commonapi.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,5 +20,6 @@ public class Account {
     private AccountStatus status;
     private String currency;
     @OneToMany(mappedBy = "account")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<Operation> operations;
 }

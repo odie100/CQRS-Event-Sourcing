@@ -5,6 +5,7 @@ import com.unidev.cqrs.commonapi.events.AccountActivatedEvent;
 import com.unidev.cqrs.commonapi.events.AccountCreatedEvent;
 import com.unidev.cqrs.commonapi.events.AccountCreditedEvent;
 import com.unidev.cqrs.commonapi.events.AccountDebitedEvent;
+import com.unidev.cqrs.commonapi.queries.GetAllAccountQuery;
 import com.unidev.cqrs.query.entities.Account;
 import com.unidev.cqrs.query.entities.Operation;
 import com.unidev.cqrs.query.repositories.AccountRepository;
@@ -12,9 +13,11 @@ import com.unidev.cqrs.query.repositories.OperationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -72,5 +75,10 @@ public class AccountServiceHandler {
         account.setBalance(account.getBalance() + event.getAmount());
         this.operationRepository.save(operation);
         this.accountRepository.save(account);
+    }
+
+    @QueryHandler
+    public List<Account> on(GetAllAccountQuery query){
+        return this.accountRepository.findAll();
     }
 }
